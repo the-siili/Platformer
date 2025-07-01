@@ -200,17 +200,15 @@ int main(){
             }
         }
 
-
         lastMousePos = GetMousePosition();
         
-        BeginDrawing();
+        BeginTextureMode(screen);
             ClearBackground(LIGHTGRAY);
-            BeginMode2D(camera);
-                for(int x = -mapSizeX/2; x <= mapSizeX/2; x++){
-                    DrawLine(x*tilesize, -(mapSizeY/2)*tilesize, x*tilesize, (mapSizeY/2)*tilesize, GRAY);
+                for(int x = 0; x <= mapSizeX; x++){
+                    DrawLine(x*tilesize, 0, x*tilesize, mapSizeY*tilesize, GRAY);
                 }
-                for(int y = -mapSizeY/2; y <= mapSizeY/2; y++){
-                    DrawLine(-(mapSizeX/2)*tilesize, y*tilesize, (mapSizeX/2)*tilesize, y*tilesize, GRAY);
+                for(int y = 0; y <= mapSizeY; y++){
+                    DrawLine(0, y*tilesize, mapSizeX*tilesize, y*tilesize, GRAY);
                 }
 
                 int indexLayers[10][1000] = {{-1}};
@@ -246,6 +244,20 @@ int main(){
                 }
 
 
+        EndTextureMode();
+
+
+
+        //Render the screen texture on to the window
+        BeginDrawing();
+            BeginMode2D(camera);
+            ClearBackground(BLACK);
+            DrawTexturePro(screen.texture, 
+                (Rectangle){0.0f, 0.0f, (float)screen.texture.width, -(float)screen.texture.height}, 
+                (Rectangle){0, 0, screen.texture.width, screen.texture.height}, 
+                (Vector2){0.0f, 0.0f} , 
+                0.0f, 
+                WHITE);
             EndMode2D();
 
             DrawText(TextFormat("Zoom: %4.2f", camera.zoom), 0, 0, 20, WHITE);
@@ -255,14 +267,12 @@ int main(){
             for(int i = 0; tileBtns[i].id != -1; i++ ){
                 DrawTexturePro(tileset, tileBtns[i].srcRect, tileBtns[i].targetRect, (Vector2){0, 0},0,  WHITE);
             }
-            
-
 
         EndDrawing();
     }
-
+    
     CloseWindow();
-
+    
     return 0;
 }
 
